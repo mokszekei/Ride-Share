@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load crispy_forms_tags %}
+<head>
+    <title>My Owned Open Rides</title>
+</head>
+<body>
+{% if ride %}
+  <h1>Ride as owner</h1>
+        <li>Ride Number : {{ride.pk}}</li>
+        <li>Owner : {{ride.owner}}</li>
+        <li>Sharers : {{sharers_list}}</li>
+        <li>Vehicle Type:{{ride.vehicle}}</li>
+        <li>Remaining seats : {{ride.remaining_seats}}</li>
+        <li>Destination : {{ride.destination}}</li>
+        <li>Arrival Time : {{ride.arrival_time}}</li>
+        <li>Ride Status : {{ride.status}}</li>
+        {% if ride.is_sharable %}
+        <li>Sharable? : YES</li>
+        {% else %}
+        <li>Sharable? : NO</li>
+        {% endif %}
+        <li>Special Request:{{ride.special_request}}</li>
+
+        <br/>
+
+    {% if not sharers %}
+        <h1> Edit Ride </h1>
+        <form action="/edit_ride/" method="POST">
+        {% csrf_token %}
+{#            {{ form|crispy }}#}
+            <li>Destination:<input type="text" name="destination" required="required"></li>
+            <li>Arrival Time:<input type="datetime-local" name="arrival_time" required="required"></li>
+            <li>Party Size:<input type="number" name="party_size" min="1" max="6" required="required"></li>
+            <li>vehicle:<select type="text" name="vehicle">
+                    <option  value = "Sedan">Sedan</option>
+                    <option  value = "SUV">SUV</option>
+                </select></li>
+            <li>Sharable or Not:<select type="boolean" name="sharable">
+                            <option value = True>Yes</option>
+                            <option value = False>No</option>
+                        </select></li>
+            <li>Special Request:<input type="text" name="special_request"></li>
+
+
+            <input type="hidden" name="edit_id" value={{ride.pk}}>
+            <button class="btn btn-outline-info" type="submit"> Save Changes </button>
+        </form>
+    {% else %}
+        <h3> Your ride already have sharers, so you cannot edit it anymore!</h3>
+    {% endif %}
+
+
+{% else %}
+    <p>No such ride.</p>
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,35 @@
+{% load crispy_forms_tags %}
+{% block content%}
+<h1>Enter your info to search available rides</h1>
+<body>
+<form action="/search_ride/" method="post">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <button class="btn btn-outline-info" type="submit"> Search </button>
+</form>
+
+</body>
+
+{% if existRides %}
+     {% if available_rides %}
+        <h1>Available rides</h1>
+        {% for ride in available_rides %}
+            <h5>Ride No.{{ride.id}} </h5>
+                <p>Ride owner: <strong>{{ ride.owner }}</strong> </p>
+                <p>Vehicle: {{ ride.vehicle }} </p>
+                <p>Destination: <strong>{{ ride.destination }}</strong> </p>
+                <p>Arrival time: {{ ride.arrival_time }}</p>
+                <p>Remaining seats {{ ride.remaining_seats }}</p>
+                <p>Status : {{ ride.status }} </p>
+            <form action="/join_ride/" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="ride_detail_id" value={{ride.id}}>
+                <input type="hidden" name="size" value={{size}}>
+                <button class="btn btn-outline-info" type="submit"> Join This Ride </button>
+            </form>
+        {% endfor %}
+     {% else  %}
+         <p>No available ride</p>
+     {% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,31 @@
+{% block content%}
+<h1>Look for open rides</h1>
+<body>
+    <p><a href="/driver_search_ride/">Search</a></p>
+    <p></p>
+
+</body>
+
+<h1>Confirmed rides</h1>
+<body>
+{% for ride in confirmed_rides %}
+    <h5>Ride No.{{ride.id}} </h5>
+        <p>Ride owner: <strong>{{ ride.owner }}</strong> </p>
+        <p>Vehicle: {{ ride.vehicle }} </p>
+        <p>Destination: <strong>{{ ride.destination }}</strong> </p>
+        <p>Arrival time: {{ ride.arrival_time }}</p>
+        <p>Remaining seats {{ ride.remaining_seats }}</p>
+        <p>Status : {{ ride.status }} <a href="/complete_ride/{{ride.id}}/">Complete</a></p>
+{% endfor %}
+</body>
+
+<h1>Completed rides</h1>
+<body>
+{% for ride in completed_rides %}
+    <h5>Ride No.{{ride.id}} </h5>
+        <p>Ride owner: <strong>{{ ride.owner }}</strong> </p>
+        <p>Destination: <strong>{{ ride.destination }}</strong> </p>
+        <p>Arrival time: {{ ride.arrival_time }}</p>
+{% endfor %}
+</body>
+{% endblock %}

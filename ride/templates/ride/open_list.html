@@ -1,0 +1,27 @@
+{% block content%}
+
+<h1>Rides I own</h1>
+<body>
+{% for ride in owner_open_rides %}
+    <h5>Ride No.{{ride.id}}  <a href="/owner_view_open/{{ride.id}}/">view ride detail</a></h5>
+        <p>Ride owner: {{ ride.owner }} </p>
+        <p>Vehicle: {{ ride.vehicle }} </p>
+        <p>Destination: {{ ride.destination }}</p>
+        <p>Arrival time: {{ ride.arrival_time }}</p>
+        <p>Remaining seats {{ ride.remaining_seats }}</p>
+        <p>Status : {{ ride.status }} </p>
+{% endfor %}
+</body>
+
+
+<h1>Rides I join</h1>
+<body>
+{% for ride in sharer_open_rides %}
+    <h5>Ride No.{{ride.id}} <a href="/sharer_view_open/{{ride.id}}/">view ride detail</a></h5>
+        <p>Ride owner: <strong>{{ ride.owner }}</strong> </p>
+        <p>Destination: <strong>{{ ride.destination }}</strong> </p>
+        <p>Arrival time: {{ ride.arrival_time }}</p>
+{% endfor %}
+</body>
+
+{% endblock %}
