@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from .forms import RequestForm,SharedForm
-from .models import Ride, RideDetail, User
+from .models import Ride, RideDetail
+from users.models import Driver
+from django.contrib.auth.models import User
 from datetime import datetime
 from django.shortcuts import HttpResponseRedirect
 from django.shortcuts import render
@@ -17,12 +19,13 @@ curr_time = pytz.utc.localize(curr_time)
 
 def create_ride(request):
     # TODO：change to real loggined driver
-    user = User.objects.filter(pk=1).first()
+    user = request.user
+    # user = User.objects.filter(pk=1).first()
     # user = User.objects.create(name = "Siqi Mo",email="mosiqi1996@hotmail.com")
 
     if request.method == 'POST':
         owner_email = user.email
-        owner = user.name
+        owner = user.first_name +''+ user.last_name
         form = RequestForm(request.POST)
         if form.is_valid():
             arrival_time = form.cleaned_data['arrival_time']
@@ -110,21 +113,23 @@ def owner_view_open(request, ride_detail_id):
     sharers_list = [];
     for ride in ride_list:
         user = User.objects.filter(pk=ride.user_id).first()
-        sharers_list.append(user.name)
+        sharers_list.append(user.first_name)
     context = {'ride': ride_detail, "sharers_list" : sharers_list, "sharers": ride_list}
     return render(request, "ride/owner_view_open.html", context)
 
 
 def sharer_view_open(request, ride_detail_id):
-    user = User.objects.filter(pk=1).first()
+    # user = User.objects.filter(pk=1).first()
+    user = request.user
     ride = Ride.objects.filter(ride_detail_id=ride_detail_id,user_id=user.id)[0]
     # ride_detail_id = ride.ride_detail_id
     ride_detail = RideDetail.objects.filter(id=ride_detail_id)[0]
     ride_list = Ride.objects.filter(ride_detail_id=ride_detail_id,user_role='Sharer')
     sharers_list = [];
     for ride in ride_list:
+        # TODO：
         user = User.objects.filter(pk=ride.user_id).first()
-        sharers_list.append(user.name)
+        sharers_list.append(user.first_name)
     context = {'ride': ride_detail, "sharers_list" : sharers_list,"ride_id":ride.id}
     return render(request, "ride/sharer_view_open.html", context)
 
@@ -155,7 +160,8 @@ def sharer_edit_ride(request):
 
 def search_ride(request):
     # TODO：change to real loggined user
-    user = User.objects.filter(pk=1).first()
+    # user = User.objects.filter(pk=1).first()
+    user = request.user
 
     if request.method == 'POST':
         form = SharedForm(request.POST)
@@ -186,7 +192,8 @@ def search_ride(request):
 
 def join_ride(request):
     # TODO：change to real loggined user
-    user = User.objects.filter(pk=1).first()
+    # user = User.objects.filter(pk=1).first()
+    user = request.user
 
     data = request.POST
     ride_detail_id = data['ride_detail_id']
@@ -203,27 +210,30 @@ def join_ride(request):
 
 def driver_search_ride(request):
     # TODO：change to real loggined user
-    user = User.objects.filter(pk=1).first()
+    # user = User.objects.filter(pk=1).first()
+    user = request.user
+    driver = Driver.objects.filter(user_id=user.id)[0]
 
-    open_rides = RideDetail.objects.filter(vehicle=user.vehicle, status="Open")
+    open_rides = RideDetail.objects.filter(vehicle=driver.Vtype, status="Open")
     open_rides = open_rides.exclude(owner_email=user.email)
 
     # To DO : connect to real logined user
-    # for ride in open_rides:
-    #     if ride.special_request:
-    #         if ride.special_request != user.special_info:
-    #             open_rides = open_rides.exclude(id=ride.id)
+    for ride in open_rides:
+        if ride.special_request:
+            if ride.special_request != driver.special_info:
+                open_rides = open_rides.exclude(id=ride.id)
     return render(request, 'ride/driver_search_ride.html', {'open_rides': open_rides})
 
 
 def confirm_ride(request,ride_detail_id):
     # TODO：change to real loggined driver
-    user = User.objects.filter(pk=76).first()
+    # user = User.objects.filter(pk=76).first()
     # user = User.objects.create(name="Jimmy", email="jjssid333@gmail.com")
+    user = request.user
 
     ride_detail = RideDetail.objects.filter(id=ride_detail_id)[0]
     ride_detail.status = 'Confirmed'
-    ride_detail.driver = user.name
+    ride_detail.driver = user.first_name
     ride_detail.save()
 
     ride = ride_detail.ride_set.create(user_role='Driver', party_size=1)
@@ -242,7 +252,7 @@ def confirm_ride(request,ride_detail_id):
     message = 'Here is the info of the ride\n'
     message += 'Destination: ' + ride_detail.destination + '\n'
     message += 'Arrival time: ' + str(ride_detail.arrival_time) + '\n'
-    message += 'Driver: ' + user.name + '\n'
+    message += 'Driver: ' + user.first_name + '\n'
     message += 'Vehicle: ' + ride_detail.vehicle + '\n'
 
     from_email = settings.EMAIL_HOST_USER
@@ -260,7 +270,8 @@ def complete_ride(request,ride_detail_id):
 def driver_view_confirmed(request):
 
     # TODO：change to real loggined driver
-    driver =User.objects.filter(pk=76).first()
+    # driver =User.objects.filter(pk=76).first()
+    driver = request.user
     rides = Ride.objects.filter(user_id = driver.id ,user_role = 'Driver')
     confirmed_rides = []
     completed_rides = []
@@ -275,12 +286,41 @@ def driver_view_confirmed(request):
     return render(request, 'ride/driver_view_confirmed.html', {'confirmed_rides': confirmed_rides, 'completed_rides': completed_rides})
 
 
-# def view_confirmed(request):
-# sharer owner 都一样
+def view_confirmed(request):
+
+    user = request.user
+    rides = Ride.objects.filter(user_id=user.id)
+    rides = rides.exclude(user_role='Driver')
+    confirmed_rides = []
+
+    for ride in rides:
+        ride_detail = RideDetail.objects.filter(id=ride.ride_detail_id)[0]
+        if ride_detail.status == 'Confirmed':
+            confirmed_rides.append(ride_detail)
+
+    return render(request, 'ride/view_confirmed.html',{'confirmed_rides': confirmed_rides})
+
+
+def view_confirmed_detail(request, ride_detail_id):
+    ride_detail = RideDetail.objects.filter(id=ride_detail_id)[0]
+    ride_list = Ride.objects.filter(ride_detail_id=ride_detail_id, user_role='Sharer')
+    sharers_list = [];
+    for ride in ride_list:
+        user = User.objects.filter(pk=ride.user_id).first()
+        sharers_list.append(user.first_name)
+
+    ride = Ride.objects.filter(ride_detail_id=ride_detail_id, user_role='Driver')[0]
+    user = User.objects.filter(pk=ride.user_id).first()
+    driver_name = user.first_name+' '+user.last_name
+    driver = Driver.objects.filter(user_id=ride.user_id)[0]
+    context = {'ride': ride_detail, "sharers_list": sharers_list, "sharers": ride_list,"driver":driver, "driver_name":driver_name}
+    return render(request, "ride/view_confirmed_detail.html", context)
+
 
 def view_open(request):
     # TODO：change to real loggined driver
-    user =User.objects.filter(pk=1).first()
+    # user =User.objects.filter(pk=1).first()
+    user = request.user
 
     owner_rides = Ride.objects.filter(user_id=user.id, user_role='Owner')
     owner_open_rides = []
@@ -299,4 +339,4 @@ def view_open(request):
         if ride_detail.status == 'Open':
             sharer_open_rides.append(ride_detail)
 
-    return render(request, 'ride/open_list.html',{'owner_open_rides': owner_open_rides, 'sharer_open_rides':sharer_open_rides })
+    return render(request, 'ride/open_list.html',{'owner_open_rides': owner_open_rides, 'sharer_open_rides':sharer_open_rides})

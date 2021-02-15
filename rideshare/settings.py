@@ -31,13 +31,14 @@ SECRET_KEY = 'opf(l)!(fc0=d&dt$x*jmv(p95kq=^)mumu8d$-0mfw*r@1#_i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['vcm-18086.vm.duke.edu','127.0.0.1']
+ALLOWED_HOSTS = ['568vm.colab.duke.edu','127.0.0.1','vcm-18086.vm.duke.edu']
 
 
 # Application definition
 
 INSTALLED_APPS = [
     'ride.apps.RideConfig',
+    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -81,6 +82,16 @@ WSGI_APPLICATION = 'rideshare.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'vuxfnbtn',
+#         'USER' : 'vuxfnbtn',
+#         'PASSWORD' : 'sggNiOc6nq6EcUJt-2i0H6vFDsz2ZVWa',
+#         'HOST' : 'ziggy.db.elephantsql.com',
+#         'PORT' : '5432'
+#     }
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -91,7 +102,6 @@ DATABASES = {
         'PORT' : '5432'
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -130,3 +140,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_REDIRECT_URL = 'profile'
+LOGIN_URL = 'login'

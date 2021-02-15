@@ -1,6 +1,4 @@
 
-{% load crispy_forms_tags %}
-
 {% extends "users/base.html" %}
 {% block content%}
 <body>
@@ -19,24 +17,18 @@
         {% else %}
         <li>Sharable? : NO</li>
         {% endif %}
+        <li>Driver : {{driver_name}}</li>
+        <li>Vehicle brand : {{driver.brand}}</li>
+        <li>Vehicle model : {{driver.model}}</li>
+        <li>Plate Number : {{driver.plateNum}}</li>
+
         <li>Special Request:{{ride.special_request}}</li>
 
         <br/>
-
-
-    <h2> Edit Ride </h2>
-    <form action="/sharer_edit_ride/" method="POST">
-    {% csrf_token %}
-        <li>Party Size:<input type="number" name="party_size" min="1" max="6" required="required"></li>
-        <input type="hidden" name="edit_id" value={{ride.pk}}>
-        <input type="hidden" name="ride_id" value={{ride_id}}>
-        <button class="btn btn-outline-info" type="submit"> Save Changes </button>
-    </form>
-
-
 
 {% else %}
     <p>No such ride.</p>
 {% endif %}
 </body>
 {% endblock %}
+

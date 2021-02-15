@@ -1,16 +1,16 @@
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
-
-class User(models.Model):
-    name = models.CharField(max_length=200, null=True)
-    email = models.CharField(max_length=200)
-    # password = models.CharField(max_length=200)
-    vehicle = models.CharField(max_length=20, default='Sedan');
-
-    def __str__(self):
-        return self.email
+# class User(models.Model):
+#     name = models.CharField(max_length=200, null=True)
+#     email = models.CharField(max_length=200)
+#     # password = models.CharField(max_length=200)
+#     vehicle = models.CharField(max_length=20, default='Sedan');
+#
+#     def __str__(self):
+#         return self.email
 
 
 class RideDetail(models.Model):
@@ -32,7 +32,7 @@ class RideDetail(models.Model):
 class Ride(models.Model):
     user_role = models.CharField(max_length=20);
     party_size = models.IntegerField(default= 1);
-    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True,db_column='user')
     ride_detail = models.ForeignKey(RideDetail, on_delete=models.CASCADE,blank=True,null=True)
 
     def __str__(self):

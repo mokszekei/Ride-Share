@@ -1,0 +1,9 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <h1>User: {{ user.username }}</h1>
+    <h2>Name: {{ user.first_name }} {{ user.last_name }}</h2>
+    <h2>Email: {{ user.email }}</h2>
+    <h2>Phone: {{ user.rider.phone }}</h2>
+    <a href= "{% url 'driver' %}">Driver Tab</a>
+{% endblock content%}

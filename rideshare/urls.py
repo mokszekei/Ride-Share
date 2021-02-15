@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from ride import views as ride_views
+from users import views as users_views
+
 
 urlpatterns = [
     path('create_ride/',ride_views.create_ride,name='create_ride'),
@@ -32,5 +35,15 @@ urlpatterns = [
     path('confirm_ride/<int:ride_detail_id>/', ride_views.confirm_ride, name='confirm_ride'),
     path('complete_ride/<int:ride_detail_id>/', ride_views.complete_ride, name='complete_ride'),
     path('driver_view_confirmed/',ride_views.driver_view_confirmed, name='driver_view_confirmed'),
+    path('view_confirmed_detail/<int:ride_detail_id>/',ride_views.view_confirmed_detail,name='view_confirmed_detail'),
+    path('view_confirmed/',ride_views.view_confirmed,name='view_confirmed'),
+    
+    path('register/',users_views.register, name='register'),
+    path('login/',auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
+    path('logout/',auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
+    path('profile/',users_views.profile,name='profile'),
+    path('driver_register/',users_views.driver_register,name='driver_register'),
+    path('driver/',users_views.driver,name='driver'),
+    
     path('admin/', admin.site.urls),
 ]
