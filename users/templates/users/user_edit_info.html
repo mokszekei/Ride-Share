@@ -1,17 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Request Ride Success</title>
-</head>
 {% extends "users/base.html" %}
-{% block content%}
-<h3>You successfully requested a ride!</h3>
-<br>
-<body>
-  <a href="{% url 'view_open' %}">Back to all rides</a>
-</form>
-</body>
-{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-outline-info" type="submit"> Save Changes </button>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                <a class="ml-2" href="{% url 'profile' %}">Cancel</a>
+            </small>
+        </div>
+    </div>
+{% endblock content%}
 {% block sidebar %}
 <div class="col-md-4">
     <div class="content-section">
@@ -28,4 +30,3 @@
     </div>
 </div>
 {% endblock %}
-</html>

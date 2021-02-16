@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import Driver,Rider
-from django.forms.fields import DateInput, DateField
+from django.forms.fields import DateInput, DateField, NumberInput
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()
@@ -12,6 +12,14 @@ class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = Rider
         fields = ['username','email','password1','password2','first_name','last_name','phone','cardInfo']
+
+class UserEditInfoForm(forms.Form):
+    email = forms.EmailField()
+    phone = forms.IntegerField()
+    cardInfo = forms.IntegerField()
+    first_name = forms.CharField(max_length=100, required=True)
+    last_name = forms.CharField(max_length=100,required=True)
+    
 
 class DateInput(forms.DateInput):
     input_type = 'date'

@@ -1,14 +1,15 @@
 {% extends "users/base.html" %}
-<head>
-    <title>Claim Ride Success</title>
-</head>
-{% block content%}
-<h3>You have successfully claim a ride!</h3>
-<br>
-<body>
-<a href="/driver_view_confirmed/">Back to driver ride list</a>
-</body>
-{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-outline-info" type="submit"> Save Changes </button>
+            <a href="{% url 'driver' %}">Cancel</a>
+        </form>
+    </div>
+{% endblock content%}
 {% block sidebar %}
 <div class="col-md-4">
     <div class="content-section">

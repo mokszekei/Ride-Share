@@ -8,6 +8,7 @@ from django.shortcuts import HttpResponseRedirect
 from django.shortcuts import render
 from django.conf import settings
 from django.core.mail import send_mail
+from django.contrib import messages
 import logging
 import pytz
 
@@ -49,7 +50,7 @@ def create_ride(request):
                 sharable = form.cleaned_data['sharable'],
                 special_request = form.cleaned_data['special_request'],
             )
-            ride_detail.save();
+            ride_detail.save()
             ride = ride_detail.ride_set.create(user_role='Owner', party_size=party_size)
             user.ride_set.add(ride)
             return HttpResponseRedirect('/create_ride_success/')
@@ -92,12 +93,12 @@ def edit_ride(request):
         edit_ride_detail.vehicle = vehicle
         edit_ride_detail.sharable = data.get('sharable')
         edit_ride_detail.special_request = data.get('special_request')
-        edit_ride_detail.save();
+        edit_ride_detail.save()
 
         # edit_ride = Ride.objects.filter(ride_detail_id=ride_detail_id)[0]
         edit_ride.party_size = party_size
-        edit_ride.save();
-
+        edit_ride.save()
+        messages.success(request, f'You have successfully edited the ride request!')
         return HttpResponseRedirect('/owner_view_open/'+ride_detail_id)
 
 
@@ -110,7 +111,7 @@ def create_ride_success(request):
 def owner_view_open(request, ride_detail_id):
     ride_detail = RideDetail.objects.filter(id=ride_detail_id)[0]
     ride_list = Ride.objects.filter(ride_detail_id=ride_detail_id,user_role='Sharer')
-    sharers_list = [];
+    sharers_list = []
     for ride in ride_list:
         user = User.objects.filter(pk=ride.user_id).first()
         sharers_list.append(user.first_name)
@@ -125,7 +126,7 @@ def sharer_view_open(request, ride_detail_id):
     # ride_detail_id = ride.ride_detail_id
     ride_detail = RideDetail.objects.filter(id=ride_detail_id)[0]
     ride_list = Ride.objects.filter(ride_detail_id=ride_detail_id,user_role='Sharer')
-    sharers_list = [];
+    sharers_list = []
     for ride in ride_list:
         # TODO：
         user = User.objects.filter(pk=ride.user_id).first()
@@ -189,7 +190,6 @@ def search_ride(request):
         return render(request, 'ride/search_ride.html', {'form': form, "existRides":False})
 
 
-
 def join_ride(request):
     # TODO：change to real loggined user
     # user = User.objects.filter(pk=1).first()
@@ -199,12 +199,16 @@ def join_ride(request):
     ride_detail_id = data['ride_detail_id']
     party_size = int(data['size'])
     ride_detail = RideDetail.objects.filter(id=ride_detail_id)[0]
-    ride_detail.remaining_seats -= party_size
-    ride_detail.save()
+    rides_in = Ride.objects.filter(user=user,ride_detail=ride_detail)
+    if len(rides_in)==0:
+        ride_detail.remaining_seats -= party_size
+        ride_detail.save()
 
-    ride = ride_detail.ride_set.create(user_role='Sharer', party_size=party_size)
-    user.ride_set.add(ride)
-    return render(request, 'ride/join_success.html')
+        ride = ride_detail.ride_set.create(user_role='Sharer', party_size=party_size)
+        user.ride_set.add(ride)
+        return render(request, 'ride/join_success.html')
+    else:
+        return render(request,'ride/join_fail.html')
 
 
 
@@ -304,7 +308,7 @@ def view_confirmed(request):
 def view_confirmed_detail(request, ride_detail_id):
     ride_detail = RideDetail.objects.filter(id=ride_detail_id)[0]
     ride_list = Ride.objects.filter(ride_detail_id=ride_detail_id, user_role='Sharer')
-    sharers_list = [];
+    sharers_list = []
     for ride in ride_list:
         user = User.objects.filter(pk=ride.user_id).first()
         sharers_list.append(user.first_name)

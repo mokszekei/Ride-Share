@@ -39,11 +39,13 @@ urlpatterns = [
     path('view_confirmed/',ride_views.view_confirmed,name='view_confirmed'),
     
     path('register/',users_views.register, name='register'),
-    path('login/',auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
+    path('',auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
     path('logout/',auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('profile/',users_views.profile,name='profile'),
     path('driver_register/',users_views.driver_register,name='driver_register'),
     path('driver/',users_views.driver,name='driver'),
-    
+    path('driver_edit_info/',users_views.driver_edit_info,name ='driver_edit_info'),
+    path('user_edit_info/',users_views.user_edit_info,name='user_edit_info'),
+
     path('admin/', admin.site.urls),
 ]

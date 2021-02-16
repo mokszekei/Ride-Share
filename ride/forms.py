@@ -21,7 +21,7 @@ class RequestForm(forms.Form):
                               choices=(("Sedan", "Sedan"),
                                        ("SUV", "SUV")))
 
-    sharable = forms.BooleanField(required=True)
+    sharable = forms.BooleanField(required=False)
     special_request = forms.CharField(label='Special Request', max_length=100,required=False)
     # edit_id = forms.IntegerField(widget=forms.HiddenInput(),required=True)
 

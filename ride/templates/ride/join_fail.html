@@ -1,14 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <title>Request Ride Success</title>
+    <title>Join Ride Fail</title>
 </head>
+
 {% extends "users/base.html" %}
 {% block content%}
-<h3>You successfully requested a ride!</h3>
+<h3>You are already in this ride!</h3>
 <br>
 <body>
-  <a href="{% url 'view_open' %}">Back to all rides</a>
+  <div>
+    <a href="{% url 'view_open'%}">view all rides</a>
+  </div>
 </form>
 </body>
 {% endblock %}
@@ -28,4 +29,3 @@
     </div>
 </div>
 {% endblock %}
-</html>

@@ -3,13 +3,33 @@
 <h1>Open rides</h1>
 <body>
 {% for ride in open_rides %}
-    <h5>Ride No.{{ride.id}} </h5>
-    <p>Ride owner: <strong>{{ ride.owner }}</strong> </p>
-    <p>Vehicle: {{ ride.vehicle }} </p>
-    <p>Destination: <strong>{{ ride.destination }}</strong> </p>
-    <p>Arrival time: {{ ride.arrival_time }}</p>
-    <p>Remaining seats {{ ride.remaining_seats }}</p>
-    <p>Status : {{ ride.status }} <a href="/confirm_ride/{{ ride.id }}/">Claim</a> </p>
+    <article class="media content-section">
+        <div class="media-body">
+        <div class="article-metadata">
+            <p class="mr-2">Ride No.{{ride.id}} Ride owner: <strong>{{ ride.owner }}</strong></p>
+        </div>
+            <p>Destination: <strong>{{ ride.destination }}</strong> </p>
+            <p>Arrival time: {{ ride.arrival_time }}</p>
+            <p>Remaining seats {{ ride.remaining_seats }}</p>
+            <p>Vehicle: {{ ride.vehicle }} </p>
+            <p>Status : {{ ride.status }}</p>
+            <a href="/confirm_ride/{{ ride.id }}/">Claim</a>
+        </div>
+    </article>
 {% endfor %}
 </body>
+{% endblock %}
+{% block sidebar %}
+<div class="col-md-4">
+    <div class="content-section">
+    <h3>Driver Sidebar</h3>
+    <p class='text-muted'>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-light"><a href="{% url 'driver' %}">Driver personal info</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'driver_search_ride' %}">Look for open rides</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'driver_view_confirmed' %}">Confirmed and Completed Rides</a></li>
+        </ul>
+    </p>
+    </div>
+</div>
 {% endblock %}

@@ -1,34 +1,53 @@
-
 {% extends "users/base.html" %}
 {% block content%}
 <body>
 {% if ride %}
-  <h1>Ride as sharer</h1>
-        <li>Ride Number : {{ride.pk}}</li>
-        <li>Owner : {{ride.owner}}</li>
-        <li>Sharers : {{sharers_list}}</li>
-        <li>Vehicle Type:{{ride.vehicle}}</li>
-        <li>Remaining seats : {{ride.remaining_seats}}</li>
-        <li>Destination : {{ride.destination}}</li>
-        <li>Arrival Time : {{ride.arrival_time}}</li>
-        <li>Ride Status : {{ride.status}}</li>
-        {% if ride.is_sharable %}
-        <li>Sharable? : YES</li>
-        {% else %}
-        <li>Sharable? : NO</li>
-        {% endif %}
-        <li>Driver : {{driver_name}}</li>
-        <li>Vehicle brand : {{driver.brand}}</li>
-        <li>Vehicle model : {{driver.model}}</li>
-        <li>Plate Number : {{driver.plateNum}}</li>
-
-        <li>Special Request:{{ride.special_request}}</li>
-
+  <h1>Ride detail</h1>
+        <article class="media content-section">
+          <div class="media-body">
+          <div class="article-metadata">
+              <p class="mr-2"><strong>Ride No.{{ride.id}}</strong> Ride owner: <strong>{{ ride.owner }}</strong></p>
+          </div>
+              <p>Destination: <strong>{{ ride.destination }}</strong> </p>
+              <p>Arrival time: {{ ride.arrival_time }}</p>
+              <p>Sharers : {% if sharers_list %}{% for sharer in sharers_list %} {{ sharer }} {% endfor %}{% else %} no sharers {% endif %}</p>
+              <p>Vehicle Type: {{ride.vehicle}}</p>
+              <p>Remaining seats: {{ ride.remaining_seats }}</p>
+              {% if ride.sharable %}
+                  <p>Sharable : YES</p>
+              {% else %}
+                  <p>Sharable : NO</p>
+              {% endif %}
+              <p>Status : {{ ride.status }}</p>
+              <p>Special Request: {{ride.special_request}}</p>
+              <hr></hr>
+              <p><strong>Driver</strong> : {{driver_name}}</p>
+              <p>Vehicle brand : {{driver.brand}}</p>
+              <p>Vehicle model : {{driver.model}}</p>
+              <p>Plate Number : {{driver.plateNum}}</p>
+          </div>
+      </article>
         <br/>
 
 {% else %}
     <p>No such ride.</p>
 {% endif %}
 </body>
+{% endblock %}
+{% block sidebar %}
+<div class="col-md-4">
+    <div class="content-section">
+    <h3>Rider Sidebar</h3>
+    <p class='text-muted'>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-light"><a href="{% url 'profile' %}">Personal info</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'create_ride' %}">Create a ride request</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'search_ride' %}">Search for a ride share</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'view_open' %}">View open rides</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'view_confirmed' %}">View confirmed rides</a></li>
+        </ul>
+    </p>
+    </div>
+</div>
 {% endblock %}
 

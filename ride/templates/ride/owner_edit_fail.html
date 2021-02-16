@@ -6,9 +6,25 @@
 <p>Please check your arrival time and party size.</p>
 <br>
 <body>
-  <form action="" method="POST">
-  {% csrf_token %}
-    <input type="submit" value="return to main page">
+  <div>
+  <a href="{% url 'view_open'%}">view all rides</a>
+  </div>
 </form>
 </body>
+{% endblock %}
+{% block sidebar %}
+<div class="col-md-4">
+    <div class="content-section">
+    <h3>Rider Sidebar</h3>
+    <p class='text-muted'>
+        <ul class="list-group">
+            <li class="list-group-item list-group-item-light"><a href="{% url 'profile' %}">Personal info</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'create_ride' %}">Create a ride request</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'search_ride' %}">Search for a ride share</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'view_open' %}">View open rides</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{% url 'view_confirmed' %}">View confirmed rides</a></li>
+        </ul>
+    </p>
+    </div>
+</div>
 {% endblock %}
