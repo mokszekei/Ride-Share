@@ -11,15 +11,18 @@ Unsolved: Our system does not support this functionalities. However, these funct
 Solved: If a user want to join or claim a ride that he has joined or claimed, we will redirect user to error page.
 
 5. User can only access driver's function urls,like viewing driver profile and editing driver info, when he/she registered as driver. 
-Solved: We check whether the user is registerd as driver when they want to visit driver's function urls. If not, we redirect them back to driver registration page.
+Solved: We check whether the user is registerd as driver when they want to visit driver's function urls. If not, we redirect them 
+back to driver registration page.
 
-6. For security consideration, our system requires user to set a strong password. If the password doesn't meet the requirements, we redirect user to registration page. Actually, we should use field validation. Once the password is not ok, we give prompt to user.
+6. For security consideration, our system requires user to set a strong password. If the password doesn't meet the requirements, we 
+redirect user to registration page. Actually, we should use field validation. Once the password is not ok, we give prompt to user.
 
 7. An email can only be used once for registration. Now, our system accept registration with the same email. 
 Unsolved: Email should be a unique key.
 
 8. User cannot join a ride that he is the owner.
 Solved: Filter these rides out when user is searching for a ride share.
+
 
 
 

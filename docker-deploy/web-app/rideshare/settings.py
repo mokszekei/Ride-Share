@@ -31,7 +31,7 @@ SECRET_KEY = 'opf(l)!(fc0=d&dt$x*jmv(p95kq=^)mumu8d$-0mfw*r@1#_i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['568vm.colab.duke.edu','127.0.0.1','vcm-18086.vm.duke.edu']
+ALLOWED_HOSTS = ['web','568vm.colab.duke.edu','127.0.0.1','vcm-18086.vm.duke.edu']
 
 
 # Application definition
@@ -95,10 +95,10 @@ WSGI_APPLICATION = 'rideshare.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'jrauhxly',
-        'USER' : 'jrauhxly',
-        'PASSWORD' : 'fErY9dxaNNs3xlzHo115v9vV7-zSaYqx',
-        'HOST' : 'ziggy.db.elephantsql.com',
+        'NAME': 'postgres',
+        'USER' : 'postgres',
+        'PASSWORD' : 'postgres',
+        'HOST' : 'db',
         'PORT' : '5432'
     }
 }
